@@ -11,7 +11,7 @@ st.set_page_config(page_title="에겐로그 유튜브", layout="wide")
 
 # ✅ 시간 함수 고치기
 def now_ts():
-    return datetime.utcnow()
+    return datetime()
 
 # ----------------------------------------------------
 # 홈페이지 사이드바, 메인 배경 색상변경 (set_page_config 다음에!)
@@ -37,26 +37,12 @@ st.markdown("""
 # ----------------------------------------------------
 # Firestore 연결 (key.json 또는 st.secrets 둘 다 지원)
 # ----------------------------------------------------
-def get_db():
-    if not firebase_admin._apps:
-        try:
-            svc = st.secrets.get("firebase_service_account", None)
-        except Exception:
-            svc = None
+key_dict = json.loads(st.secrets["firebase_key"])
+cred = credentials.Certificate(key_dict)
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 
-        if svc:
-            cred = credentials.Certificate(dict(svc))
-            firebase_admin.initialize_app(cred)
-        else:
-            if not os.path.exists("key.json"):
-                st.error("key.json이 프로젝트 폴더에 없어요. app.py 옆에 key.json을 넣어주세요.")
-                st.stop()
-            cred = credentials.Certificate("key.json")
-            firebase_admin.initialize_app(cred)
-
-    return firestore.client()
-
-db = get_db()
+db = firestore.client()
 
 def now_ts():
     return datetime()
