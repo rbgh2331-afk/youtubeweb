@@ -44,15 +44,6 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
-def now_ts():
-    return datetime()
-
-def safe_text(x):
-    return (x or "").strip()
-
-def render_divider():
-    st.markdown("---")
-
 # ----------------------------------------------------
 # 로그인 상태 (session_state)
 # ----------------------------------------------------
