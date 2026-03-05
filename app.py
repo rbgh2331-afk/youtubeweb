@@ -4,14 +4,8 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
 import json
-import random
 
-# ✅ 반드시 Streamlit 호출 중 제일 먼저!
 st.set_page_config(page_title="에겐로그 유튜브", layout="wide")
-
-# ✅ 시간 함수 고치기
-def now_ts():
-    return datetime()
 
 # ----------------------------------------------------
 # 홈페이지 사이드바, 메인 배경 색상변경 (set_page_config 다음에!)
@@ -35,7 +29,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------------------------------
-# Firestore 연결 (key.json 또는 st.secrets 둘 다 지원)
+# Firestore 연결
 # ----------------------------------------------------
 key_dict = json.loads(st.secrets["firebase_key"])
 cred = credentials.Certificate(key_dict)
@@ -43,6 +37,15 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
+
+def now_ts():  # def는 코드를 짧게 쓰려는 기능(함수를 만드는 문법)
+    return datetime()
+
+def safe_text(x):
+    return (x or "").strip()
+
+def render_divider():
+    st.markdown("---")
 
 # ----------------------------------------------------
 # 로그인 상태 (session_state)
@@ -55,7 +58,6 @@ if "user_id" not in st.session_state:
 def do_logout():
     st.session_state["login"] = False
     st.session_state["user_id"] = None
-
 
 # ----------------------------------------------------
 # 사이드바: 날짜 + 로그인/회원가입 + 메뉴
@@ -243,12 +245,14 @@ if menu == "💡 아이디어":
             st.markdown(f"**{title}**")
             if data.get("one_line"):
                 st.caption(data.get("one_line"))
+                # st.caption은 작은 글씨 설명
             if memo:
                 st.write(memo)
 
         with c3:
             st.write(f"#{cat}")
             st.caption(status)
+            # st.caption은 작은 글씨 설명
 
         with c4:
             if st.button("삭제", key=f"idea_del_{d.id}"):
@@ -435,6 +439,6 @@ elif menu == "✅ 업로드 체크":
 
             with colC:
                 st.caption(f"완료 상태: {'완료' if all_done else '진행중'}")
-
+                # st.caption은 작은 글씨 설명
     if shown == 0:
         st.info("업로드 체크리스트가 아직 없어요. 위에서 새로 만들어봐요!")
