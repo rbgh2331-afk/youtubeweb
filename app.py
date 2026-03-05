@@ -6,33 +6,26 @@ from datetime import datetime
 import json
 import random
 
+# ✅ 반드시 Streamlit 호출 중 제일 먼저!
+st.set_page_config(page_title="에겐로그 유튜브", layout="wide")
+
+# ✅ 시간 함수 고치기
+def now_ts():
+    return datetime.utcnow()
+
 # ----------------------------------------------------
-# 홈페이지 사이드바, 메인 배경 색상변경
+# 홈페이지 사이드바, 메인 배경 색상변경 (set_page_config 다음에!)
 # ----------------------------------------------------
 st.markdown("""    
 <style>
-
-[data-testid="stAppViewContainer"]{
-background-color:#FFFBF1;
-}
-
-[data-testid="stSidebar"]{
-background-color:#FFF2D0;
-}
-
-.stButton>button{
-background-color:#E36A6A;
-color:white;
-border-radius:8px;
-}
-
+[data-testid="stAppViewContainer"]{ background-color:#FFFBF1; }
+[data-testid="stSidebar"]{ background-color:#FFF2D0; }
+.stButton>button{ background-color:#E36A6A; color:white; border-radius:8px; }
 </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(page_title="에겐로그 유튜브", layout="wide")
 st.markdown("""
 <style>
-/* 메인 콘텐츠 영역 폭 제한 */
 .block-container {
     max-width: 1100px;
     padding-top: 2rem;
